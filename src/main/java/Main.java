@@ -40,7 +40,7 @@ public class Main {
         /* Create a facade object, must provide: (i) project root directory (absolute path),
                                                  (ii) starting file path (absolute path) &
                                                  (iii) the starting method's MethodDeclaration object */
-        MaintainabilityFacade facade = new MaintainabilityFacade(projectDir, startingFile, methodDeclaration);
+        InvestigatorFacade facade = new InvestigatorFacade(projectDir, startingFile, methodDeclaration);
 
         /* If all the methods of the starting file must be investigated, you can create a facade directly as: */
 //        MaintainabilityFacade facade = new MaintainabilityFacade(projectDir, startingFile);

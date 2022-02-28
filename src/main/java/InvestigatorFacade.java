@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  *
  */
 
-public final class MaintainabilityFacade {
+public final class InvestigatorFacade {
 
     private final Project project;
     private final String startingFile;
@@ -45,13 +45,13 @@ public final class MaintainabilityFacade {
 
     private final Set<MethodCallSet> methodCallSets = new HashSet<>();
 
-    public MaintainabilityFacade(String projectDir, String startingFile, MethodDeclaration startingMethod) {
+    public InvestigatorFacade(String projectDir, String startingFile, MethodDeclaration startingMethod) {
         this.project = new Project(projectDir);
         this.startingFile = startingFile;
         this.startingMethod = startingMethod;
     }
 
-    public MaintainabilityFacade(String projectDir, String startingFile) {
+    public InvestigatorFacade(String projectDir, String startingFile) {
         project = new Project(projectDir);
         this.startingFile = startingFile;
         this.startingMethod = null;

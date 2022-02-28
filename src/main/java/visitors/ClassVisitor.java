@@ -154,6 +154,8 @@ public class ClassVisitor extends VoidVisitorAdapter<Void> {
                 MethodDeclaration invokedMethodDeclaration = getMethodDeclarationInCompilationUnitByName(cu, methodCallExpr.getName().asString());
                 if (Objects.nonNull(invokedMethodDeclaration)) {
                     try {
+                        if (invokedMethodDeclaration.equals(method.asMethodDeclaration()))
+                            continue;
                         Optional<Range> invokedMethodRangeOptional = invokedMethodDeclaration.getRange();
                         invokedMethodRangeOptional.ifPresent(range -> methodCallSet.addMethodCall(new MethodDecl(invokedMethodDeclaration.findCompilationUnit().get().getStorage().get().getPath().toString().replace("\\", "/").replace(project.getClonePath(), "").substring(1), resolvedMethodCallExpression.getPackageName(), methodCallExpr.getNameAsString(), resolvedMethodCallExpression.getQualifiedName(), new CodeRange(range.begin.line, range.end.line))));
                         createMethodCallSets(invokedMethodDeclaration, methodCallSet);
