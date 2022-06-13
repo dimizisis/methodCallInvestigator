@@ -43,7 +43,7 @@ public class Main {
         InvestigatorFacade facade = new InvestigatorFacade(projectDir, startingFile, methodDeclaration);
 
         /* If all the methods of the starting file must be investigated, you can create a facade directly as: */
-//        MaintainabilityFacade facade = new MaintainabilityFacade(projectDir, startingFile);
+//        InvestigatorFacade facade = new InvestigatorFacade(projectDir, startingFile);
 
         /* Just call start, method call sets can also be retrieved by getter */
         Set<MethodCallSet> methodCallSets = facade.start();
