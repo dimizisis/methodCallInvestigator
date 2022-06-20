@@ -71,7 +71,7 @@ public final class InvestigatorFacade {
             return null;
         fillImplementationMap(sourceRoots);
         startCalculations(sourceRoots);
-        return this.methodCallSets;
+        return this.getMethodCallSets();
     }
 
     /**
@@ -80,7 +80,7 @@ public final class InvestigatorFacade {
      */
     private ProjectRoot getProjectRoot() {
         return new SymbolSolverCollectionStrategy()
-                .collect(Paths.get(project.getClonePath()));
+                .collect(Paths.get(getProject().getClonePath()));
     }
 
     /**
@@ -89,7 +89,7 @@ public final class InvestigatorFacade {
      * user-defined classes
      */
     private void createSymbolSolver() {
-        TypeSolver javaParserTypeSolver = new JavaParserTypeSolver(new File(project.getClonePath()));
+        TypeSolver javaParserTypeSolver = new JavaParserTypeSolver(new File(getProject().getClonePath()));
         JavaSymbolSolver symbolSolver = new JavaSymbolSolver(javaParserTypeSolver);
         ParserConfiguration parserConfiguration = new ParserConfiguration();
         parserConfiguration
@@ -116,7 +116,7 @@ public final class InvestigatorFacade {
                                     .filter(cu -> cu.getResult().get().getStorage().isPresent())
                                     .forEach(cu -> {
                                         try {
-                                            project.getJavaFiles().add(new JavaFile(cu.getResult().get(), cu.getResult().get().getStorage().get().getPath().toString().replace("\\", "/").replace(project.getClonePath(), "").substring(1),
+                                            getProject().getJavaFiles().add(new JavaFile(cu.getResult().get(), cu.getResult().get().getStorage().get().getPath().toString().replace("\\", "/").replace(getProject().getClonePath(), "").substring(1),
                                                     cu.getResult().get().getStorage().get().getPath().toString().replace("\\", "/"),
                                                     cu.getResult().get().findAll(ClassOrInterfaceDeclaration.class)
                                                             .stream()
@@ -131,7 +131,7 @@ public final class InvestigatorFacade {
                     });
         } catch (Exception ignored) {
         }
-        return project.getJavaFiles().size();
+        return getProject().getJavaFiles().size();
     }
 
     private void fillImplementationMap(List<SourceRoot> sourceRoots) {
@@ -176,7 +176,7 @@ public final class InvestigatorFacade {
                                 .stream()
                                 .filter(res -> res.getResult().isPresent())
                                 .filter(res -> res.getResult().get().getStorage().isPresent())
-                                .filter(res -> res.getResult().get().getStorage().get().getPath().toAbsolutePath().toString().replace("\\", "/").equals(this.startingFile))
+                                .filter(res -> res.getResult().get().getStorage().get().getPath().toAbsolutePath().toString().replace("\\", "/").equals(this.getStartingFile()))
                                 .forEach(res -> {
                                     analyzeClassOrInterfaces(res.getResult().get());
                                 });
@@ -194,7 +194,7 @@ public final class InvestigatorFacade {
         cu.findAll(ClassOrInterfaceDeclaration.class).forEach(cl -> {
             try {
                 if (cu.getStorage().isPresent()) {
-                    cl.accept(new ClassVisitor(project, methodCallSets, cu.getStorage().get().getPath().toString().replace("\\", "/").replace(project.getClonePath(), "").substring(1), this.startingMethod), null);
+                    cl.accept(new ClassVisitor(getProject(), getMethodCallSets(), cu.getStorage().get().getPath().toString().replace("\\", "/").replace(getProject().getClonePath(), "").substring(1), this.getStartingMethod()), null);
                 }
             } catch (Exception ignored) {}
         });
