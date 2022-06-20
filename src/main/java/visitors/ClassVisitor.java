@@ -178,22 +178,34 @@ public class ClassVisitor extends VoidVisitorAdapter<Void> {
      * @return the MethodDeclaration object if exists, null otherwise
      */
     private MethodDeclaration getMethodDeclarationInCompilationUnitByName(CompilationUnit compilationUnit, String methodSimpleName) {
-//        Optional<MethodDeclaration> methodOptional = compilationUnit.findAll(MethodDeclaration.class).stream().filter(methodDeclaration -> methodDeclaration.getName().asString().equals(methodSimpleName)).findFirst();
-//        return methodOptional.orElse(null);
         for (ClassOrInterfaceDeclaration classOrInterfaceDeclaration : compilationUnit.findAll(ClassOrInterfaceDeclaration.class)) {
             Optional<MethodDeclaration> methodOptional;
             if (classOrInterfaceDeclaration.isInterface()) {
-                try {
-                    String implementationPath = InterfaceImplementations.getImplementedTypesByInterface(classOrInterfaceDeclaration.getFullyQualifiedName().get());
-                    CompilationUnit cu = findCompilationUnit(implementationPath);
-                    methodOptional = cu.findAll(MethodDeclaration.class).stream().filter(methodDeclaration -> methodDeclaration.getName().asString().equals(methodSimpleName)).findFirst();
-                    return methodOptional.orElse(null);
-                } catch (Exception ignored) {
-                }
+                return getMethodImplementation(classOrInterfaceDeclaration, methodSimpleName);
             } else {
                 methodOptional = classOrInterfaceDeclaration.findAll(MethodDeclaration.class).stream().filter(methodDeclaration -> methodDeclaration.getName().asString().equals(methodSimpleName)).findFirst();
                 return methodOptional.orElse(null);
             }
+        }
+        return null;
+    }
+
+    /**
+     * Searches & returns the MethodDeclaration object of the method's
+     * implementation.
+     *
+     * @param interfaceDeclaration the interface declaration object
+     * @param methodSimpleName method's simple name
+     *
+     * @return the implementation of the MethodDeclaration object if exists, null otherwise
+     */
+    private MethodDeclaration getMethodImplementation(ClassOrInterfaceDeclaration interfaceDeclaration, String methodSimpleName) {
+        try {
+            String implementationPath = InterfaceImplementations.getImplementedTypesByInterface(interfaceDeclaration.getFullyQualifiedName().get());
+            CompilationUnit cu = findCompilationUnit(implementationPath);
+            Optional<MethodDeclaration> methodOptional = cu.findAll(MethodDeclaration.class).stream().filter(methodDeclaration -> methodDeclaration.getName().asString().equals(methodSimpleName)).findFirst();
+            return methodOptional.orElse(null);
+        } catch (Exception ignored) {
         }
         return null;
     }
