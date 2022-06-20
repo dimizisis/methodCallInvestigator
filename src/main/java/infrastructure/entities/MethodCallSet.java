@@ -18,7 +18,7 @@ import java.util.Set;
  *
  */
 
-public class MethodCallSet {
+public final class MethodCallSet {
 
     private final MethodDecl methodDeclaration;
     private final Set<MethodDecl> methodCalls;
